@@ -1097,26 +1097,26 @@ ic_private void term_end_raw(term_t* term, bool force) {
 static void term_init_raw(term_t* term) {
   term->hcon = GetStdHandle(STD_OUTPUT_HANDLE);
   GetConsoleMode(term->hcon, &term->hcon_orig_mode);
-  CONSOLE_SCREEN_BUFFER_INFOEX info;
-  memset(&info, 0, sizeof(info));
-  info.cbSize = sizeof(info);
-  if (GetConsoleScreenBufferInfoEx(term->hcon, &info)) {
-    // store default attributes
-    term->hcon_default_attr = info.wAttributes;
-    // update our color table with the actual colors used.    
-    for (unsigned i = 0; i < 16; i++) {
-      COLORREF cr = info.ColorTable[i];
-      uint32_t color = (ic_cap8(GetRValue(cr))<<16) | (ic_cap8(GetGValue(cr))<<8) | ic_cap8(GetBValue(cr)); // COLORREF = BGR
-      // index is also in reverse in the bits 0 and 2 
-      unsigned j = (i&0x08) | ((i&0x04)>>2) | (i&0x02) | (i&0x01)<<2;
-      debug_msg("term: ansi color %d is 0x%06x\n", j, color);
-      ansi256[j] = color;
-    }    
-  }
-  else {
-    DWORD err = GetLastError();
-    debug_msg("term: cannot get console screen buffer: %d %x", err, err);
-  }
+  //CONSOLE_SCREEN_BUFFER_INFOEX info;
+  //memset(&info, 0, sizeof(info));
+  //info.cbSize = sizeof(info);
+  //if (GetConsoleScreenBufferInfoEx(term->hcon, &info)) {
+  //  // store default attributes
+  //  term->hcon_default_attr = info.wAttributes;
+  //  // update our color table with the actual colors used.    
+  //  for (unsigned i = 0; i < 16; i++) {
+  //    COLORREF cr = info.ColorTable[i];
+  //    uint32_t color = (ic_cap8(GetRValue(cr))<<16) | (ic_cap8(GetGValue(cr))<<8) | ic_cap8(GetBValue(cr)); // COLORREF = BGR
+  //    // index is also in reverse in the bits 0 and 2 
+  //    unsigned j = (i&0x08) | ((i&0x04)>>2) | (i&0x02) | (i&0x01)<<2;
+  //    debug_msg("term: ansi color %d is 0x%06x\n", j, color);
+  //    ansi256[j] = color;
+  //  }    
+  //}
+  //else {
+  //  DWORD err = GetLastError();
+  //  debug_msg("term: cannot get console screen buffer: %d %x", err, err);
+  //}
   term_start_raw(term); // initialize the hcon_mode
   term_end_raw(term,false);
 }
